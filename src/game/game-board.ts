@@ -121,12 +121,18 @@ export class GameBoard {
         return [];
     }
     putStone(to: number) {
-        const putPiece = Piece.go(this.turn);
-        const takePieces = this.takeDeadPieces(to);
         this.next({
-            piece: putPiece,
+            piece: Piece.go(this.turn),
             to,
-            takePieces,
+            takePieces: this.takeDeadPieces(to),
+            doPromote: false,
+        });
+    }
+    putPiece(to: number, type: number) {
+        this.next({
+            piece: new Piece(this.turn, "stand", type),
+            to,
+            takePieces: [],
             doPromote: false,
         });
     }

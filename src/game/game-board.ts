@@ -61,8 +61,9 @@ export class GameBoard {
     next(next: HistoryLike) {
         if(next.piece == null) return false;
         if(next.piece.pos === next.to) return false;
+        const pieceStand = this.getPieceStand();
         if(next.piece.pos === "stand") {
-            if(!this.getPieceStand().has(next.piece.type)) return false;
+            if(!pieceStand.has(next.piece.type)) return false;
         }
         const takePieces = next.takePieces.filter(Boolean) as Piece[]
         this.history.push({
@@ -78,7 +79,7 @@ export class GameBoard {
 
         for(const piece of takePieces) {
             this.removeFromPos(piece);
-            this.getPieceStand().push(piece);
+            pieceStand.push(piece);
         }
 
         this.toggleTurn();
@@ -104,9 +105,10 @@ export class GameBoard {
         this.board[prev.to] = null;
         this.addToPos(prev.piece);
 
+        const pieceStand = this.getPieceStand();
         for(const piece of prev.takePieces) {
             this.addToPos(piece);
-            this.getPieceStand().pop(piece);
+            pieceStand.pop(piece);
         }
 
         this.toggleTurn();

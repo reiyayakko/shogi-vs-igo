@@ -85,7 +85,7 @@ export class GameBoard {
 
         return true;
     }
-    clearFuture() {
+    private clearFuture() {
         this.future.splice(Infinity);
     }
     redo() {

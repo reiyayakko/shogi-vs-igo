@@ -44,14 +44,14 @@ export class GameBoard {
             ? this.shogiPlayerPieceStand
             : this.goPlayerPieceStand;
     }
-    private addToPos(piece: Piece) {
+    private setPiece(piece: Piece) {
         if(piece.pos === "stand") {
             this.getPieceStand().push(piece);
         } else {
             this.board[piece.pos] = piece;
         }
     }
-    private removeFromPos(piece: Piece) {
+    private unsetPiece(piece: Piece) {
         if(piece.pos === "stand") {
             this.getPieceStand().pop(piece);
         } else {
@@ -75,10 +75,10 @@ export class GameBoard {
         });
 
         this.board[next.to] = next.piece.move(next.to, next.promote);
-        this.removeFromPos(next.piece);
+        this.unsetPiece(next.piece);
 
         for(const piece of takePieces) {
-            this.removeFromPos(piece);
+            this.unsetPiece(piece);
             pieceStand.push(piece);
         }
 
@@ -103,11 +103,11 @@ export class GameBoard {
         this.future.push(prev);
 
         this.board[prev.to] = null;
-        this.addToPos(prev.piece);
+        this.setPiece(prev.piece);
 
         const pieceStand = this.getPieceStand();
         for(const piece of prev.takePieces) {
-            this.addToPos(piece);
+            this.setPiece(piece);
             pieceStand.pop(piece);
         }
 

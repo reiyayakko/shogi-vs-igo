@@ -18,7 +18,7 @@ interface HistoryLike {
     to: number;
     piece: PieceLike;
     takePieces: PieceLike[];
-    doPromote: boolean;
+    promote: boolean;
 }
 
 export interface History extends HistoryLike {
@@ -71,10 +71,10 @@ export class GameBoard {
             to: next.to,
             takePieces: takePieces,
             at: Date.now(),
-            doPromote: next.doPromote,
+            promote: next.promote,
         });
 
-        this.board[next.to] = next.piece.move(next.to, next.doPromote);
+        this.board[next.to] = next.piece.move(next.to, next.promote);
         this.removeFromPos(next.piece);
 
         for(const piece of takePieces) {
@@ -127,7 +127,7 @@ export class GameBoard {
             piece: Piece.go(this.turn),
             to,
             takePieces: this.takeDeadPieces(to),
-            doPromote: false,
+            promote: false,
         });
     }
     putPiece(to: number, type: number) {
@@ -135,7 +135,7 @@ export class GameBoard {
             piece: new Piece(this.turn, "stand", type),
             to,
             takePieces: [],
-            doPromote: false,
+            promote: false,
         });
     }
     movePiece(from: number, to: number, doPromote=false) {
@@ -143,7 +143,7 @@ export class GameBoard {
             piece: this.board[from],
             to,
             takePieces: [this.board[to]],
-            doPromote,
+            promote: doPromote,
         });
     }
 }

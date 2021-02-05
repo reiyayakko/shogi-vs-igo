@@ -1,5 +1,6 @@
 
 import { Piece, PieceLike, Player } from "./piece";
+import { PieceStand } from "./piece-stand";
 
 const defaultInit = `
 P1-GO-GO-GO-GO-OU-GO-GO-GO-GO
@@ -26,35 +27,13 @@ export interface History extends HistoryLike {
     at: number;
 }
 
-export interface PieceStand {
-    [Piece.GO]: number;
-    [Piece.ROOK]: number;
-    [Piece.BISHOP]: number;
-    [Piece.GOLD]: number;
-    [Piece.SILVER]: number;
-    [Piece.KNIGHT]: number;
-    [Piece.LANCE]: number;
-    [Piece.PAWN]: number;
-}
-
-const createPieceStand = (): PieceStand => ({
-    [Piece.GO]: 0,
-    [Piece.ROOK]: 0,
-    [Piece.BISHOP]: 0,
-    [Piece.GOLD]: 0,
-    [Piece.SILVER]: 0,
-    [Piece.KNIGHT]: 0,
-    [Piece.LANCE]: 0,
-    [Piece.PAWN]: 0,
-});
-
 export class GameBoard {
     static readonly BOARD_SIZE = 9;
     readonly firstPlayer: Player = Piece.GO_PLAYER;
     turn: Player = this.firstPlayer;
     readonly board: PieceLike[] = createBoardFromCSALike(defaultInit);
-    readonly shogiPlayerPieceStand: PieceStand = createPieceStand();
-    readonly goPlayerPieceStand: PieceStand = createPieceStand();
+    readonly shogiPlayerPieceStand = new PieceStand;
+    readonly goPlayerPieceStand = new PieceStand;
     readonly history: History[] = [];
     readonly future: History[] = [];
     private toggleTurn() {
@@ -65,26 +44,16 @@ export class GameBoard {
             ? this.shogiPlayerPieceStand
             : this.goPlayerPieceStand;
     }
-    private addToPieceStand({ type }: Piece) {
-        const pieceStand = this.getPieceStand();
-        if(!(type in pieceStand)) type--;
-        pieceStand[type as keyof PieceStand]++;
-    }
-    private removeFromPieceStand({ type }: Piece) {
-        const pieceStand = this.getPieceStand();
-        if(!(type in pieceStand)) type--;
-        pieceStand[type as keyof PieceStand]--;
-    }
     private addToPos(piece: Piece) {
         if(piece.pos === "stand") {
-            this.addToPieceStand(piece);
+            this.getPieceStand().push(piece);
         } else {
             this.board[piece.pos] = piece;
         }
     }
     private removeFromPos(piece: Piece) {
         if(piece.pos === "stand") {
-            this.removeFromPieceStand(piece);
+            this.getPieceStand().pop(piece);
         } else {
             this.board[piece.pos] = null;
         }
@@ -106,7 +75,7 @@ export class GameBoard {
 
         for(const piece of takePieces) {
             this.removeFromPos(piece);
-            this.addToPieceStand(piece);
+            this.getPieceStand().push(piece);
         }
 
         this.toggleTurn();
@@ -134,7 +103,7 @@ export class GameBoard {
 
         for(const piece of prev.takePieces) {
             this.addToPos(piece);
-            this.removeFromPieceStand(piece);
+            this.getPieceStand().pop(piece);
         }
 
         this.toggleTurn();

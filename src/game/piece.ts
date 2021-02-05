@@ -29,21 +29,21 @@ export class Piece {
     static readonly PROMOTE = 8;
     /** GO/Stone/碁石 */
     static readonly GO = 0;
-    /** OU/King/王, 玉 */
+    /** OU/King/王将, 玉将 */
     static readonly KING = 1;
-    /** HI/Rook/飛車 */
+    /** HI/Rook/飛車 (RY/竜王) */
     static readonly ROOK = 2;
-    /** KA/Bishop/角行 */
+    /** KA/Bishop/角行 (UM/竜馬) */
     static readonly BISHOP = 3;
-    /** KI/Gold/金 */
+    /** KI/Gold/金将 */
     static readonly GOLD = 4;
-    /** GI/Silver/銀 */
+    /** GI/Silver/銀将 (NG/全/成銀) */
     static readonly SILVER = 5;
-    /** KE/Knight/桂馬 */
+    /** KE/Knight/桂馬 (NK/圭/成桂) */
     static readonly KNIGHT = 6;
-    /** KY/Lance/香車 */
+    /** KY/Lance/香車 (NY/杏/成香) */
     static readonly LANCE = 7;
-    /** FU/Pawn/歩兵 */
+    /** FU/Pawn/歩兵 (TO/と金) */
     static readonly PAWN = 8;
     static canMove(type: number, amount: Vec2): boolean {
         switch(type) {

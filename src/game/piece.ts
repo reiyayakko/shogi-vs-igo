@@ -14,7 +14,10 @@ export class Piece {
         public readonly type: number,
     ) {}
     move(pos: number, doPromote=false): Piece {
-        return new Piece(this.player, pos, this.type + +doPromote);
+        return new Piece(this.player, pos, this.type + (doPromote ? Piece.PROMOTE : 0));
+    }
+    get isPromoted(): boolean {
+        return Piece.PROMOTE < this.type;
     }
     static go(player: Player=this.GO_PLAYER) {
         return new this(player, "stand", this.GO);
@@ -22,6 +25,8 @@ export class Piece {
     static shogi(type: number) {
         return new this(this.SHOGI_PLAYER, "stand", type);
     }
+    /** 成った駒のoffset */
+    static readonly PROMOTE = 8;
     /** GO/Stone/碁石 */
     static readonly GO = 0;
     /** OU/King/王, 玉 */
@@ -29,17 +34,17 @@ export class Piece {
     /** HI/Rook/飛車 */
     static readonly ROOK = 2;
     /** KA/Bishop/角行 */
-    static readonly BISHOP = 4;
+    static readonly BISHOP = 3;
     /** KI/Gold/金 */
-    static readonly GOLD = 6;
+    static readonly GOLD = 4;
     /** GI/Silver/銀 */
-    static readonly SILVER = 7;
+    static readonly SILVER = 5;
     /** KE/Knight/桂馬 */
-    static readonly KNIGHT = 9;
+    static readonly KNIGHT = 6;
     /** KY/Lance/香車 */
-    static readonly LANCE = 11;
+    static readonly LANCE = 7;
     /** FU/Pawn/歩兵 */
-    static readonly PAWN = 13;
+    static readonly PAWN = 8;
     static canMove(type: number, amount: Vec2): boolean {
         switch(type) {
         case this.GO:

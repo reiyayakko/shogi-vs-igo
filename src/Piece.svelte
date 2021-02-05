@@ -66,8 +66,7 @@
             background-image: url("../assets/shogi_"+$type+".png");
         }
         @if $type != "gold" {
-            $i: $i + 1;
-            .type-#{$i} {
+            .type-#{$i + 8} {
                 background-image: url("../assets/shogi_"+$type+"_promoted.png");
             }
         }

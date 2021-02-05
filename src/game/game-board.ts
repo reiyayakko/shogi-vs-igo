@@ -61,6 +61,9 @@ export class GameBoard {
     next(next: HistoryLike) {
         if(next.piece == null) return false;
         if(next.piece.pos === next.to) return false;
+        if(next.piece.pos === "stand") {
+            if(!this.getPieceStand().has(next.piece.type)) return false;
+        }
         const takePieces = next.takePieces.filter(Boolean) as Piece[]
         this.history.push({
             piece: next.piece,

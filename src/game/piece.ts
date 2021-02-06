@@ -1,5 +1,6 @@
 
-import type { Pos, Vec2 } from "./types";
+import type { Pos } from "./types";
+import { GameBoard } from "./game-board";
 
 export type Player = typeof Piece.SHOGI_PLAYER | typeof Piece.GO_PLAYER;
 
@@ -45,38 +46,41 @@ export class Piece {
     static readonly LANCE = 7;
     /** FU/Pawn/歩兵 (TO/と金) */
     static readonly PAWN = 8;
-    static canMove(type: number, amount: Vec2): boolean {
+    static canMove(type: number, from: Pos, to: number): boolean {
+        if(from === "stand") return true;
         const abs = Math.abs;
+        const amount_x = (to % GameBoard.BOARD_SIZE) - (from % GameBoard.BOARD_SIZE);
+        const amount_y = (to / GameBoard.BOARD_SIZE | 0) - (from / GameBoard.BOARD_SIZE | 0);
         switch(type) {
         case this.GO:
             return false;
         case this.KING:
-            return abs(amount.x) < 2 && abs(amount.y) < 2;
+            return abs(amount_x) < 2 && abs(amount_y) < 2;
         case this.ROOK + this.PROMOTE:
         case this.BISHOP + this.PROMOTE:
-            return this.canMove(this.KING, amount)
-                || this.canMove(type - this.PROMOTE, amount);
+            return this.canMove(this.KING, from, to)
+                || this.canMove(type - this.PROMOTE, from, to);
         case this.ROOK:
-            return amount.x === 0 || amount.y === 0;
+            return amount_x === 0 || amount_y === 0;
         case this.BISHOP:
-            return abs(amount.x) === abs(amount.y);
+            return abs(amount_x) === abs(amount_y);
         case this.SILVER + this.PROMOTE:
         case this.KNIGHT + this.PROMOTE:
         case this.LANCE + this.PROMOTE:
         case this.PAWN + this.PROMOTE:
         case this.GOLD:
-            return amount.y === 1 ? abs(amount.x) < 2
-                : amount.y === 0 ? abs(amount.x) === 1
-                : amount.y === -1 && amount.x === 0;
+            return amount_y === 1 ? abs(amount_x) < 2
+                : amount_y === 0 ? abs(amount_x) === 1
+                : amount_y === -1 && amount_x === 0;
         case this.SILVER:
-            return amount.y === 1 ? abs(amount.x) < 2
-                : amount.y === -1 && abs(amount.x) === 1;
+            return amount_y === 1 ? abs(amount_x) < 2
+                : amount_y === -1 && abs(amount_x) === 1;
         case this.KNIGHT:
-            return abs(amount.x) === 1 && amount.y === 2;
+            return abs(amount_x) === 1 && amount_y === 2;
         case this.LANCE:
-            return amount.x === 0 && amount.y > 0;
+            return amount_x === 0 && amount_y > 0;
         case this.PAWN:
-            return amount.x === 0 && amount.y === 1;
+            return amount_x === 0 && amount_y === 1;
         default:
             throw new TypeError(`Invald ShogiPiece type. (${type})`);
         }

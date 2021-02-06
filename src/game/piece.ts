@@ -46,36 +46,38 @@ export class Piece {
     /** FU/Pawn/歩兵 (TO/と金) */
     static readonly PAWN = 8;
     static canMove(type: number, amount: Vec2): boolean {
+        const abs = Math.abs;
         switch(type) {
         case this.GO:
             return false;
         case this.KING:
-            return Math.abs(amount.x) < 2 && Math.abs(amount.y) < 2;
-        case this.ROOK + 1:
-        case this.BISHOP + 1:
+            return abs(amount.x) < 2 && abs(amount.y) < 2;
+        case this.ROOK + this.PROMOTE:
+        case this.BISHOP + this.PROMOTE:
             return this.canMove(this.KING, amount)
-                || this.canMove(type - 1, amount);
+                || this.canMove(type - this.PROMOTE, amount);
         case this.ROOK:
             return amount.x === 0 || amount.y === 0;
         case this.BISHOP:
-            return Math.abs(amount.x) === Math.abs(amount.y);
+            return abs(amount.x) === abs(amount.y);
+        case this.SILVER + this.PROMOTE:
+        case this.KNIGHT + this.PROMOTE:
+        case this.LANCE + this.PROMOTE:
+        case this.PAWN + this.PROMOTE:
         case this.GOLD:
-            return amount.y === 1 ? Math.abs(amount.x) < 2
-                : amount.y === 0 ? Math.abs(amount.x) === 1
+            return amount.y === 1 ? abs(amount.x) < 2
+                : amount.y === 0 ? abs(amount.x) === 1
                 : amount.y === -1 && amount.x === 0;
         case this.SILVER:
-            return amount.y === 1 ? Math.abs(amount.x) < 2
-                : amount.y === -1 && Math.abs(amount.x) === 1;
+            return amount.y === 1 ? abs(amount.x) < 2
+                : amount.y === -1 && abs(amount.x) === 1;
         case this.KNIGHT:
-            return Math.abs(amount.x) === 1 && amount.y === 2;
+            return abs(amount.x) === 1 && amount.y === 2;
         case this.LANCE:
             return amount.x === 0 && amount.y > 0;
         case this.PAWN:
             return amount.x === 0 && amount.y === 1;
         default:
-            if(type % 2 === 1) {
-                return this.canMove(this.GOLD, amount);
-            }
             throw new TypeError(`Invald ShogiPiece type. (${type})`);
         }
     }

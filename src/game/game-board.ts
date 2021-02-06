@@ -72,6 +72,7 @@ export class GameBoard {
 
         const takePieces = next.takePieces.filter(Boolean) as Piece[];
         for(const takePiece of takePieces) {
+            if(takePiece.pos === "stand") continue;
             this.unsetPiece(takePiece);
             pieceStand.push(takePiece);
         }

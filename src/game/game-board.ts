@@ -59,28 +59,30 @@ export class GameBoard {
         }
     }
     next(next: HistoryLike) {
-        if(next.piece == null) return false;
-        if(next.piece.pos === next.to) return false;
+        const { piece } = next;
+        if(piece == null || piece.pos === next.to) return false;
+
         const pieceStand = this.getPieceStand();
-        if(next.piece.pos === "stand") {
-            if(!pieceStand.has(next.piece.type)) return false;
+        if(piece.pos === "stand") {
+            if(!pieceStand.has(piece.type)) return false;
         }
-        const takePieces = next.takePieces.filter(Boolean) as Piece[]
+
+        this.unsetPiece(piece);
+        this.board[next.to] = piece.move(next.to, next.promote);
+
+        const takePieces = next.takePieces.filter(Boolean) as Piece[];
+        for(const takePiece of takePieces) {
+            this.unsetPiece(takePiece);
+            pieceStand.push(takePiece);
+        }
+
         this.history.push({
-            piece: next.piece,
+            piece,
             to: next.to,
-            takePieces: takePieces,
+            takePieces,
             at: Date.now(),
             promote: next.promote,
         });
-
-        this.board[next.to] = next.piece.move(next.to, next.promote);
-        this.unsetPiece(next.piece);
-
-        for(const piece of takePieces) {
-            this.unsetPiece(piece);
-            pieceStand.push(piece);
-        }
 
         this.toggleTurn();
 
@@ -102,6 +104,7 @@ export class GameBoard {
 
         this.future.push(prev);
 
+        // this.unsetPiece(this.board[prev.to]);
         this.board[prev.to] = null;
         this.setPiece(prev.piece);
 

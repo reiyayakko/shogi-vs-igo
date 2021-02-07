@@ -1,14 +1,11 @@
 
 import type { Pos } from "./types";
 import { GameBoard } from "./game-board";
-
-export type Player = typeof Piece.SHOGI_PLAYER | typeof Piece.GO_PLAYER;
+import { SHOGI_PLAYER, GO_PLAYER, Player } from "./player";
 
 export type PieceLike = Piece | null;
 
 export class Piece {
-    static readonly SHOGI_PLAYER = "shogi";
-    static readonly GO_PLAYER = "go";
     constructor(
         public readonly player: Player,
         public readonly pos: Pos,
@@ -20,11 +17,11 @@ export class Piece {
     get isPromoted(): boolean {
         return Piece.PROMOTE < this.type;
     }
-    static go(player: Player=this.GO_PLAYER) {
+    static go(player: Player=GO_PLAYER) {
         return new this(player, "stand", this.GO);
     }
     static shogi(type: number) {
-        return new this(this.SHOGI_PLAYER, "stand", type);
+        return new this(SHOGI_PLAYER, "stand", type);
     }
     /** 成った駒のoffset */
     static readonly PROMOTE = 8;

@@ -1,6 +1,6 @@
 
 <script lang="ts">
-    import type { Player } from "./game/piece";
+    import type { Player } from "./game/player";
     import type { PieceStand } from "./game/piece-stand";
     import Piece from "./Piece.svelte";
 

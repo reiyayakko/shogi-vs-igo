@@ -1,5 +1,6 @@
 
-import { Piece, PieceLike, Player } from "./piece";
+import { SHOGI_PLAYER, GO_PLAYER, Player } from "./player";
+import { Piece, PieceLike } from "./piece";
 import { PieceStand } from "./piece-stand";
 
 const defaultInit = `
@@ -29,7 +30,7 @@ export interface History extends HistoryLike {
 
 export class GameBoard {
     static readonly BOARD_SIZE = 9;
-    readonly firstPlayer: Player = Piece.GO_PLAYER;
+    readonly firstPlayer: Player = GO_PLAYER;
     turn: Player = this.firstPlayer;
     readonly board: PieceLike[] = createBoardFromCSALike(defaultInit);
     readonly shogiPlayerPieceStand = new PieceStand;
@@ -37,10 +38,10 @@ export class GameBoard {
     readonly history: History[] = [];
     readonly future: History[] = [];
     private toggleTurn() {
-        this.turn = this.turn === Piece.GO_PLAYER ? Piece.SHOGI_PLAYER : Piece.GO_PLAYER;
+        this.turn = this.turn === GO_PLAYER ? SHOGI_PLAYER : GO_PLAYER;
     }
     private getPieceStand() {
-        return this.turn === Piece.SHOGI_PLAYER
+        return this.turn === SHOGI_PLAYER
             ? this.shogiPlayerPieceStand
             : this.goPlayerPieceStand;
     }

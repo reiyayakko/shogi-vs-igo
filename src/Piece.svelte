@@ -12,7 +12,7 @@
     }
 </script>
 
-<div class={`type-${type} player-${player}`} role="img" aria-label={alt} />
+<div class="type-{type} player-{player}" role="img" aria-label={alt} />
 
 <style lang="scss">
     @use "env";

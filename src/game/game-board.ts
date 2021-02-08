@@ -68,15 +68,15 @@ export class GameBoard {
             if(!pieceStand.has(piece.type)) return false;
         }
 
-        this.unsetPiece(piece);
-        this.board[next.to] = piece.move(next.to, next.promote);
-
         const takePieces = next.takePieces.filter(Boolean) as Piece[];
         for(const takePiece of takePieces) {
             if(takePiece.pos === "stand") continue;
             this.unsetPiece(takePiece);
             pieceStand.push(takePiece);
         }
+
+        this.unsetPiece(piece);
+        this.setPiece(piece.move(next.to, next.promote));
 
         this.history.push({
             piece,

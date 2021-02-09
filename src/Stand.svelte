@@ -9,7 +9,7 @@
 </script>
 
 <div>
-    {#each Object.entries(stand) as [type, amount]}
+    {#each stand.entries() as [type, amount]}
         {#if amount > 0}
             <div class="stand-item">
                 <Piece type={+type} {player} />

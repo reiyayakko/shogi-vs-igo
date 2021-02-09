@@ -6,16 +6,16 @@ import { SHOGI_PLAYER, GO_PLAYER, Player } from "./player";
 export type PieceLike = Piece | null;
 
 export class Piece {
+    readonly isPromoted: boolean;
     constructor(
         public readonly player: Player,
         public readonly pos: Pos,
         public readonly type: number,
-    ) {}
+    ) {
+        this.isPromoted = Piece.PROMOTE < type;
+    }
     move(pos: number, doPromote=false): Piece {
         return new Piece(this.player, pos, this.type + (doPromote ? Piece.PROMOTE : 0));
-    }
-    get isPromoted(): boolean {
-        return Piece.PROMOTE < this.type;
     }
     static go(player: Player=GO_PLAYER) {
         return new this(player, "stand", this.GO);
